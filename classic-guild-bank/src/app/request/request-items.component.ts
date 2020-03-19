@@ -48,15 +48,15 @@ export class RequestItemsComponent implements OnInit {
 
   public showSubmitSuccess: boolean = false;
 
-  public get gold() {return this.goldForm.get('gold');}
-  public get silver() {return this.goldForm.get('silver');}
-  public get copper() {return this.goldForm.get('copper');}
+  public get gold() { return this.goldForm.get('gold'); }
+  public get silver() { return this.goldForm.get('silver'); }
+  public get copper() { return this.goldForm.get('copper'); }
 
   constructor(
-    private guildStore: GuildStore, 
+    private guildStore: GuildStore,
     private cartStore: CartStore,
     private modalService: ModalService,
-  ) { 
+  ) {
     this.guildsLoading$ = this.guildStore.guildsLoading$;
     this.charactersLoading$ = this.guildStore.charactersLoading$;
   }
@@ -67,39 +67,38 @@ export class RequestItemsComponent implements OnInit {
       next: totalGold => this.goldForm.setValidators(maxGold(totalGold))
     }));
 
-    this.guildStore.guild$.subscribe( (guild) => {
-      if(!guild)
+    this.guildStore.guild$.subscribe((guild) => {
+      if (!guild)
         return;
-      
-      this.guildStore.getGuildMembership().subscribe( () => {
+
+      this.guildStore.getGuildMembership().subscribe(() => {
         this.characterName = this.guildStore.getCurrentGuildMembership().displayName;
       });
-    });   
+    });
 
-    
-    
+
+
     this.listData$ = this.guildStore.characters$.pipe(map(characters => {
-      
+
       const itemList: CartItem[] = [];
       //this.guildMoney.gold = 0;
 
-      characters.map( c => {
-        return c.bags.map( b => b.bagSlots.map(bs => {
-          if( !bs.item )
-              return;
+      characters.map(c => {
+        return c.bags.map(b => b.bagSlots.map(bs => {
+          if (!bs.item)
+            return;
 
-            const index = itemList.findIndex( l => l.item.id === bs.item.id );
-            let listItem: CartItem;
-            if( index < 0 )
-            {
-              listItem = new CartItem(bs.item);
-              itemList.push(listItem);
-            }
-            else {
-              listItem = itemList[index];
-            }
+          const index = itemList.findIndex(l => l.item.id === bs.item.id);
+          let listItem: CartItem;
+          if (index < 0) {
+            listItem = new CartItem(bs.item);
+            itemList.push(listItem);
+          }
+          else {
+            listItem = itemList[index];
+          }
 
-            listItem.setAvailableAmount(listItem.available + bs.quantity);
+          listItem.setAvailableAmount(listItem.available + bs.quantity);
         }))
       })
       return itemList;
@@ -107,8 +106,8 @@ export class RequestItemsComponent implements OnInit {
   }
 
   addItemToCart(item: CartItem) {
-  
-    if( item.quantity.value > item.available ) {
+
+    if (item.quantity.value > item.available) {
       return;
     }
 
@@ -130,8 +129,8 @@ export class RequestItemsComponent implements OnInit {
 
   submitRequest() {
 
-    if( !this.characterName ) {
-      this.modalService.openModal(ErrorComponent, {message: "Character Name is Required"});
+    if (!this.characterName) {
+      this.modalService.openModal(ErrorComponent, { message: "Character Name is Required" });
       return;
     }
 
@@ -140,7 +139,7 @@ export class RequestItemsComponent implements OnInit {
         this.showSubmitSuccess = true;
         this.goldForm.reset();
       },
-      error: () => this.modalService.openModal(ErrorComponent, {message: "Unable to Submit Request"})
+      error: () => this.modalService.openModal(ErrorComponent, { message: "Unable to Submit Request" })
     });
   }
 

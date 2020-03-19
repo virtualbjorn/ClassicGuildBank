@@ -31,6 +31,8 @@ export class GuildStore {
     private _guildsLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
     public guildsLoading$: Observable<boolean> = this._guildsLoading.asObservable();
 
+    public isGuildOwner$: Observable<boolean>;
+
     private _guildMembers: BehaviorSubject<GuildMember[]> = new BehaviorSubject(null);
     public guildMembers$: Observable<GuildMember[]> = this._guildMembers.asObservable();
 
@@ -78,10 +80,12 @@ export class GuildStore {
     private _myItemRequests: BehaviorSubject<ItemRequest[]> = new BehaviorSubject([]);
     public myItemRequests$: Observable<ItemRequest[]> = this._myItemRequests.asObservable();
 
+    private _isReadonly: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    public isReadonly$: Observable<boolean> = this._isReadonly.asObservable();
+
     constructor(
         private _guildService: GuildService
-    ) {
-    }
+    ) { }
 
     public updateSelectedGuild(guildId: string) {
         var guilds = this._guildList.value;
@@ -450,5 +454,9 @@ export class GuildStore {
                 this._itemRequests.next(itemRequests);
             }
         }));
+    }
+
+    public updateItemNotes(itemId: number, notes: string) {
+        return this._guildService.updateItemNotes(this._guild.value.id, itemId, notes);
     }
 }

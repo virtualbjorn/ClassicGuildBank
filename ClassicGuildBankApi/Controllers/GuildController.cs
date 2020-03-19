@@ -443,6 +443,25 @@ namespace ClassicGuildBankApi.Controllers
             }
         }
 
+        [HttpPatch("UpdateItemNotes/{guildId}")]
+        public IActionResult UpdateItemNotes(Guid guildId, [FromBody]UpdateItemNotesModel updateItemNotes)
+        {
+            try
+            {
+                _guildBankRepository.UpdateItemNotes(guildId, updateItemNotes.itemId, updateItemNotes.notes);
+
+                return Ok();
+            }
+            catch (GuildBankRepository.UserCannotProcessItemRequestsException)
+            {
+                return BadRequest(new { errorMessage = "User does not have access to process upload requests for this guild." });
+            }
+            catch
+            {
+                return BadRequest(GetErrorMessageObject("Unable to Deny Item Request"));
+            }
+        }
+
         #endregion
     }
 }

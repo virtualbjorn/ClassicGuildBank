@@ -5,16 +5,20 @@
                 <span style="flex: 1; align-self: center">{{character.name}}</span>
                 <cgb-money [money]="character"></cgb-money>
             </div>
-            <div class="card-block" >
-                <cgb-list-filter [filterName]="character.name + 'Filter'" [data]="listData" (filtered)="onFiltered($event)"></cgb-list-filter>
+            <div class="card-block">
+                <cgb-list-filter [filterName]="character.name + 'Filter'" [data]="listData"
+                    (filtered)="onFiltered($event)"></cgb-list-filter>
                 <clr-datagrid style="width: 100%; padding-left: .25rem; padding-right: .25rem">
                     <clr-dg-column style="width: 44px"></clr-dg-column>
                     <clr-dg-column [clrDgSortBy]='nameComparator'>Name</clr-dg-column>
                     <clr-dg-column [clrDgSortBy]='quantityComparator'>Quantity</clr-dg-column>
                     <clr-dg-column [clrDgSortBy]='classComparator'>Category</clr-dg-column>
                     <clr-dg-column [clrDgSortBy]='subclassComparator'>Subcategory</clr-dg-column>
+                    <clr-dg-column>Notes</clr-dg-column>
+                    <clr-dg-column style="width: 110px" *ngIf="!(isReadonly$ | async)"></clr-dg-column>
 
-                    <clr-dg-placeholder>There are no items currently. Click 'Import From Addon' to import some items.</clr-dg-placeholder>
+                    <clr-dg-placeholder>There are no items currently. Click 'Import From Addon' to import some items.
+                    </clr-dg-placeholder>
 
                     <clr-dg-row *clrDgItems="let listItem of filteredData">
                         <clr-dg-cell>
@@ -34,9 +38,24 @@
                         <clr-dg-cell>
                             {{listItem.subcategory}}
                         </clr-dg-cell>
-                    </clr-dg-row>            
-                </clr-datagrid>      
-                
+                        <clr-dg-cell>
+                            <ng-container *ngIf="!(isReadonly$ | async); else isReadonlyTemplate">
+                                <div>
+                                    <textarea class="clr-input" [(ngModel)]="listItem.notes"
+                                        [disabled]="isUpdatingListItem"></textarea>
+                                </div>
+                            </ng-container>
+                            <ng-template #isReadonlyTemplate>
+                                {{listItem.notes}}
+                            </ng-template>
+                        </clr-dg-cell>
+                        <clr-dg-cell *ngIf="!(isReadonly$ | async) && (userCanUpload$ | async)">
+                            <button class="btn btn-outline cgb-import-button"
+                                (click)="updateListItem(listItem)">Update</button>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </clr-datagrid>
+
             </div>
         </div>
     </div>

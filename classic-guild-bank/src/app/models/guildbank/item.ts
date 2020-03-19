@@ -8,8 +8,9 @@ export class Item implements IWowhead {
     public url: string;
     public class: number;
     public subclass: number;
-    
-    public constructor(init?:Partial<Item>) {
+    public notes: string;
+
+    public constructor(init?: Partial<Item>) {
         Object.assign(this, init);
     }
 }

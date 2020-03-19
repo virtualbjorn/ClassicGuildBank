@@ -183,7 +183,7 @@ namespace ClassicGuildBankData.Repositories
                 _classicGuildBankDbContext.Characters.Remove(existingCharacter);
 
             _classicGuildBankDbContext.Characters.Add(character);
-            
+
             _classicGuildBankDbContext.SaveChanges();
         }
 
@@ -198,7 +198,7 @@ namespace ClassicGuildBankData.Repositories
                 CreateDepositTransaction(guildId, depositGroup);
 
             _classicGuildBankDbContext.SaveChanges();
-        }        
+        }
 
         public void RemoveMemberFromGuild(Guid guildId, string userId, ClassicGuildBankUser classicGuildBankUser)
         {
@@ -515,6 +515,21 @@ namespace ClassicGuildBankData.Repositories
                 .Count();
         }
 
+        public void UpdateItemNotes(Guid guildId, int itemId, string notes)
+        {
+            var updateItemNotesRequest = _classicGuildBankDbContext.BagSlots
+                .Include(b => b.Bag)
+                .ThenInclude(g => g.Character)
+                .Where(b => b.ItemId == itemId && b.Bag.Character.GuildId == guildId);
+            foreach(var bagSlot in updateItemNotesRequest)
+            {
+                _classicGuildBankDbContext.Attach(bagSlot);
+                bagSlot.Notes = notes;
+            }
+
+            _classicGuildBankDbContext.SaveChangesAsync();
+        }
+
         #endregion
 
         #region Private Methods
@@ -625,7 +640,7 @@ namespace ClassicGuildBankData.Repositories
             return Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "");
         }
 
-        private void UpdateItemRequestStatus(Guid itemRequestId, string status, string reason = "", Action<ItemRequest> onUpdateStatusAction = null )
+        private void UpdateItemRequestStatus(Guid itemRequestId, string status, string reason = "", Action<ItemRequest> onUpdateStatusAction = null)
         {
             var itemRequest = _classicGuildBankDbContext.ItemRequests
                 .Include(i => i.Details)

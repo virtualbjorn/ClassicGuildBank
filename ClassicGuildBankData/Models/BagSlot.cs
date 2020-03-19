@@ -24,5 +24,6 @@ namespace ClassicGuildBankData.Models
         public Bag Bag { get; set; }
 
         public Item Item { get; set; }
+        public string Notes { get; set; }
     };
 }

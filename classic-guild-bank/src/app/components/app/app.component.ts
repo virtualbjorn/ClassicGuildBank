@@ -31,7 +31,6 @@ export class AppComponent implements OnInit {
 
   private _isReadonly: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public isReadonly$: Observable<boolean> = this._isReadonly.asObservable();
-
   public authorized$: Observable<boolean>;
   public loggedInUser: string;
 
@@ -49,10 +48,14 @@ export class AppComponent implements OnInit {
   ) {
 
     this.authorized$ = this.userStore.isLoggedIn$;
+    this.userStore.userCanProcessItemRequests$ = this.userCanProcessItemRequests$;
+    this.userStore.userCanUpload$ = this.userCanUpload$;
+    this.guildStore.isGuildOwner$ = this.isGuildOwner$;
+    this.guildStore.isReadonly$ = this.isReadonly$;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this._isLoginPage.next(event.url.startsWith("/user/login"));
-        this._isReadonly.next(event.url.startsWith("/guild/readonly"))
+        this._isReadonly.next(event.url.startsWith("/guild/readonly"));
       }
     });
   }

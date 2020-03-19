@@ -8,12 +8,12 @@ export class CartItem implements IItemParent {
     public quantity: FormControl;
     public category: string;
     public subcategory: string;
-    
+
     constructor(public item: Item) {
         const cat = getCategorization(item);
-        
-        this.quantity = new FormControl(0);   
-        this.category = cat[0];     
+
+        this.quantity = new FormControl(0);
+        this.category = cat[0];
         this.subcategory = cat[1];
     }
 
