@@ -22,8 +22,11 @@ export class GuildListComponent implements OnInit {
   listData$: Observable<ListItem[]>;
   filteredData: ListItem[] = [];
 
+<<<<<<< HEAD
   isUpdatingListItem: boolean = false;
 
+=======
+>>>>>>> master
   public classComparator = new ItemClassComparator();
   public subclassComparator = new ItemSubClassComparator();
   public nameComparator = new ItemNameComparator();
@@ -59,7 +62,6 @@ export class GuildListComponent implements OnInit {
 
         return c.bags.map(b => b.bagSlots.map(bs => {
           if (!bs.item) return;
-          console.log(bs.notes);
 
           const index = itemList.findIndex(l => l.item.id === bs.item.id);
           let listItem: ListItem;
@@ -71,7 +73,7 @@ export class GuildListComponent implements OnInit {
           }
 
           listItem.quantity += bs.quantity;
-          listItem.contributions[c.name] = bs.quantity;
+          listItem.contributions[c.name] ? listItem.contributions[c.name] += bs.quantity : listItem.contributions[c.name] = bs.quantity;
           listItem.notes = bs.notes;
         }));
       });
