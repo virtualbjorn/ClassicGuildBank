@@ -22,11 +22,8 @@ export class GuildListComponent implements OnInit {
   listData$: Observable<ListItem[]>;
   filteredData: ListItem[] = [];
 
-<<<<<<< HEAD
   isUpdatingListItem: boolean = false;
 
-=======
->>>>>>> master
   public classComparator = new ItemClassComparator();
   public subclassComparator = new ItemSubClassComparator();
   public nameComparator = new ItemNameComparator();
